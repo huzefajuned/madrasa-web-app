@@ -1,15 +1,14 @@
-import { useEffect } from "react";
-import "./App.css";
-import LoadingSpinner from "./components/Spinner";
+import { useEffect, useState } from "react";
 import ErrorMessage from "./components/ErrorMsg";
 import { usePrayerStore } from "./store/store.prayer";
 import LocationHeader from "./components/Header";
-import PrayerCard from "./components/Prayer";
 import BottomNav from "./components/Bottom-Nav";
-import { gradients, prayerNames } from "./helpers/prayerIcons";
-import type { PrayerName } from "./types/prayer";
+import HomeSkeleton from "./skeletons/Home-Skeleton";
+import Hero from "./components/Hero";
 
 function App() {
+  const [isMobile, setIsMobile] = useState<boolean>(true);
+
   const {
     isLoading,
     error,
@@ -18,6 +17,17 @@ function App() {
     fetchLocation,
     fetchPrayerTimes,
   } = usePrayerStore();
+
+  useEffect(() => {
+    // Detect screen size
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -37,45 +47,36 @@ function App() {
     }
   }, [location, fetchPrayerTimes]);
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
-
-  if (!prayerTimes) {
-    return <ErrorMessage message="No prayer times available" />;
+  //message if not mobile
+  if (!isMobile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 text-center">
+        <div className="bg-white border border-red-400 text-red-600 p-6 rounded-xl shadow-md max-w-md">
+          <h2 className="text-xl font-semibold mb-2">Unsupported Screen</h2>
+          <p>This app is designed for mobile devices only.</p>
+          <p className="text-sm text-gray-500 mt-2">
+            Please open on a phone or reduce your browser width.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <LocationHeader />
-
-      <main className="px-4 py-6 space-y-4">
-        {prayerNames.map((prayer, index) => {
-          const nextPrayer = prayerNames[index + 1] || prayerNames[0]
-          // const nextPrayerTime = prayerTimes[nextPrayer];
-          const nextPrayerTime = prayerTimes[nextPrayer as PrayerName];
-
-          console.log("nextPrayerTime :",nextPrayerTime, typeof nextPrayerTime)
-          return (
-            <>
-              <PrayerCard
-                key={prayer}
-                prayer={prayer}
-                nextPrayer={nextPrayer}
-                nextPrayerTime={nextPrayerTime}
-                gradient={gradients[prayer]}
-                allPrayers={prayerTimes}
-              />
-              <p> nextPrayer :{nextPrayer}</p>
-            </>
-          );
-        })}
-      </main>
-      <BottomNav />
+    <div className="block bg-white min-h-screen max-w-sm mx-auto shadow-md border border-gray-200">
+      {isLoading ? (
+        <HomeSkeleton />
+      ) : error ? (
+        <ErrorMessage message={error} />
+      ) : !prayerTimes ? (
+        <ErrorMessage message="No prayer times available" />
+      ) : (
+        <>
+          <LocationHeader />
+          <Hero prayerTimes={prayerTimes} />
+          <BottomNav />
+        </>
+      )}
     </div>
   );
 }

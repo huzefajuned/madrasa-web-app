@@ -1,15 +1,15 @@
-// import type { NavItemType } from "../types/nav";
+import type { NavItemType } from "../types/nav";
 
-// interface Props {
-//   item: NavItemType;
-//   isActive: boolean;
-// }
 
-const NavItem = ({ item, isActive }: { item: any; isActive: any }) => {
+const NavItem = ({ item, isActive }: { item: NavItemType; isActive: boolean }) => {
   return (
-    <div className="flex flex-col items-center justify-center text-xs">
+    <div
+      className={`flex flex-col items-center justify-center text-xs ${
+        item.name === "" && "bg-[#6D2DD3]  h-12 w-12 rounded-full"
+      }`}
+    >
       <div
-        className={`w-6 h-6 mb-1 ${
+        className={`w-6 h-6 mb-1  ${
           isActive ? "text-purple-600" : "text-gray-400"
         }`}
       >

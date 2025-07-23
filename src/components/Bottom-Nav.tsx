@@ -38,8 +38,8 @@ const navItems:NavItemType[] = [
 const BottomNav: React.FC = () => {
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white  flex justify-between items-center px-4 py-2 md:hidden z-50">
-      {navItems.map((item, idx) => {
+    <nav className={`fixed bottom-0 left-0 right-0 bg-white  flex justify-between items-center px-8 py-2 md:hidden z-50`}>
+      {navItems.map((item:NavItemType, idx) => {
         const isActive = location.pathname === item.path;
         return <NavItem key={idx} item={item} isActive={isActive} />;
       })}

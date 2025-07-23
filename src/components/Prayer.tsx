@@ -38,7 +38,7 @@ const PrayerCard: React.FC<PrayerCardProps> = ({
 
   return (
     <div
-      className={`relative overflow-hidden bg-teal-950 rounded-2xl bg-gradient-to-br max-h-72 max-w-80 ${gradient} mx-auto  p-6 text-white shadow-lg`}
+      className={`relative overflow-hidden bg-teal-950 rounded-2xl bg-gradient-to-br max-h-72 max-w-80 ${gradient} mx-auto  p-4 text-white shadow-lg`}
     >
       {/* Header */}
       <div className="flex flex-row items-center justify-between mb-6 w-full">
@@ -47,7 +47,6 @@ const PrayerCard: React.FC<PrayerCardProps> = ({
           <div className=" w-full">
             <h2 className="text-2xl font-bold">{prayer}</h2>
             <p className="text-sm opacity-90 flex w-full">
-              <p>nextPrayerTime : {nextPrayerTime}</p>
               <p> Next prayer in {timeUntilNext}</p>
             </p>
           </div>

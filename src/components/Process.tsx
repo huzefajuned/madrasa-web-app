@@ -13,104 +13,84 @@ export default function PrayerProgress({
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const calculateProgress = () => {
+    const updateProgress = () => {
       const now = new Date();
-      const currentTime = now.getHours() * 60 + now.getMinutes();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-      const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-      const currentIndex = prayerOrder.indexOf(currentPrayer);
+      const order = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+      const currentIndex = order.indexOf(currentPrayer);
+      if (currentIndex === -1) return;
 
-      if (currentIndex === -1) return 0;
+      const [ch, cm] = allPrayers[currentPrayer as keyof PrayerTimes]
+        .split(":")
+        .map(Number);
+      const currentPrayerMin = ch * 60 + cm;
 
-      const currentPrayerTime = allPrayers[currentPrayer as keyof PrayerTimes];
-      const [hours, minutes] = currentPrayerTime.split(":").map(Number);
-      const prayerTimeInMinutes = hours * 60 + minutes;
+      const next = order[(currentIndex + 1) % order.length];
+      const [nh, nm] = allPrayers[next as keyof PrayerTimes]
+        .split(":")
+        .map(Number);
+      let nextPrayerMin = nh * 60 + nm;
 
-      // Get next prayer
-      const nextIndex = (currentIndex + 1) % prayerOrder.length;
-      const nextPrayer = prayerOrder[nextIndex];
-      const nextPrayerTime = allPrayers[nextPrayer as keyof PrayerTimes];
-      const [nextHours, nextMinutes] = nextPrayerTime.split(":").map(Number);
-      let nextPrayerTimeInMinutes = nextHours * 60 + nextMinutes;
+      if (nextPrayerMin < currentPrayerMin) nextPrayerMin += 24 * 60;
 
-      // Handle overnight transition
-      if (nextPrayerTimeInMinutes < prayerTimeInMinutes) {
-        nextPrayerTimeInMinutes += 24 * 60;
-      }
+      const total = nextPrayerMin - currentPrayerMin;
+      const elapsed = currentMinutes - currentPrayerMin;
 
-      const totalDuration = nextPrayerTimeInMinutes - prayerTimeInMinutes;
-      const elapsed = currentTime - prayerTimeInMinutes;
-
-      const progressPercent = Math.max(
-        0,
-        Math.min(100, (elapsed / totalDuration) * 100)
-      );
-      setProgress(progressPercent);
+      const percent = Math.max(0, Math.min(100, (elapsed / total) * 100));
+      setProgress(percent);
     };
 
-    calculateProgress();
-    const interval = setInterval(calculateProgress, 60000);
-
+    updateProgress();
+    const interval = setInterval(updateProgress, 60000);
     return () => clearInterval(interval);
   }, [currentPrayer, allPrayers]);
 
-  const circumference = 2 * Math.PI * 80;
-  const strokeDasharray = circumference;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
+  // Arc settings
+  const radius = 80;
+  const circumference = Math.PI * radius; // Half circle
+  const offset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className="flex justify-center">
-      <div className="relative w-40 h-40">
-        <svg
-          className="w-full h-full transform -rotate-90"
-          viewBox="0 0 200 200"
-        >
-          {/* Background circle */}
-          <circle
-            cx="100"
-            cy="100"
-            r="80"
-            stroke="rgba(255, 255, 255, 0.2)"
-            strokeWidth="8"
-            fill="none"
-          />
-          {/* Progress circle */}
-          <circle
-            cx="100"
-            cy="100"
-            r="80"
-            stroke="rgba(255, 255, 255, 0.8)"
-            strokeWidth="8"
-            fill="none"
-            strokeLinecap="round"
-            strokeDasharray={strokeDasharray}
-            strokeDashoffset={strokeDashoffset}
-            className="transition-all duration-1000 ease-in-out"
-          />
-          {/* Progress dots */}
-          {[0, 1, 2, 3, 4, 5].map((i) => {
-            const angle = i * 60 - 90; // Start from top, 60 degrees apart
-            const x = 100 + 80 * Math.cos((angle * Math.PI) / 180);
-            const y = 100 + 80 * Math.sin((angle * Math.PI) / 180);
-            const isActive = (progress / 100) * 6 > i;
+    <div className="w-full flex justify-center">
+      <svg viewBox="0 0 200 100" className="w-full max-w-xs ">
+        {/* Track */}
+        <path
+          d="M20,100 A80,80 0 0,1 180,100"
+          fill="none"
+          stroke="rgba(255,255,255,0.2)"
+          strokeWidth="12"
+        />
+        {/* Progress */}
+        <path
+          d="M20,100 A80,80 0 0,1 180,100"
+          fill="none"
+          stroke="white"
+          strokeWidth="10"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-1000 ease-in-out"
+        />
+        {/* Dots */}
+        {[0, 1, 2, 3, 4, 5].map((i) => {
+          const angle = Math.PI * (i / 5); // 0 to π
+          const x = 100 + radius * Math.cos(angle - Math.PI);
+          const y = 100 + radius * Math.sin(angle - Math.PI);
+          const active = (progress / 100) * 5 >= i;
 
-            return (
-              <circle
-                key={i}
-                cx={x}
-                cy={y}
-                r="4"
-                fill={
-                  isActive
-                    ? "rgba(255, 255, 255, 1)"
-                    : "rgba(255, 255, 255, 0.3)"
-                }
-                className="transition-all duration-500"
-              />
-            );
-          })}
-        </svg>
-      </div>
+          return (
+            <circle
+              key={i}
+              cx={x}
+              cy={y}
+              r="5"
+              fill={active ? "white" : "rgba(255,255,255,0.3)"}
+              className="transition-all duration-300"
+            />
+          );
+        })}
+      </svg>
     </div>
   );
 }

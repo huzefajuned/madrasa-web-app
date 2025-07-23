@@ -18,9 +18,6 @@ const Hero = ({ prayerTimes }: { prayerTimes: PrayerTimes }) => {
               gradient={gradients[prayer]}
               allPrayers={prayerTimes}
             />
-            <p className="text-center text-xs text-gray-500 mt-1">
-              Next prayer: {nextPrayer}
-            </p>
           </div>
         );
       })}

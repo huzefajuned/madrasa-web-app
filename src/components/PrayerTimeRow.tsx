@@ -1,6 +1,6 @@
 import React from "react";
 import { getPrayerIcon } from "../helpers/prayerIcons";
-import {  formatTimeOnly } from "../helpers/formatTime";
+import { formatTimeOnly } from "../helpers/formatTime";
 import type { PrayerTimes } from "../types/prayer";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 const PrayerTimeRow: React.FC<Props> = ({ currentPrayer, allPrayers }) => {
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center px-4">
       {Object.entries(allPrayers).map(([prayerName, prayerTime]) => {
         const isActive = prayerName === currentPrayer;
         const Icon = getPrayerIcon(prayerName);
@@ -27,7 +27,7 @@ const PrayerTimeRow: React.FC<Props> = ({ currentPrayer, allPrayers }) => {
             >
               <Icon className="w-4 h-4" />
             </div>
-            <p className="text-xs opacity-75 mb-1 ">{prayerName}</p>
+            <p className="text-xs opacity-75  ">{prayerName}</p>
             <p className={`text-sm`}>{formatTimeOnly(prayerTime)}</p>
           </div>
         );

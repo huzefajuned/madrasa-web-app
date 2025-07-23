@@ -42,7 +42,7 @@ const Hero = ({ prayerTimes }: { prayerTimes: PrayerTimes }) => {
   const gradient = gradients[prayer];
 
   return (
-    <main className="px-4 py-6 space-y-4 mb-20">
+    <main className="py-4">
       <PrayerCard
         prayer={prayer}
         nextPrayer={nextPrayer}

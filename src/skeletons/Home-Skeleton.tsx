@@ -10,7 +10,7 @@ const HomeSkeleton = () => {
       {/* Scrollable Content */}
       <main className="flex-1 overflow-y-auto px-4 py-6 space-y-6 animate-pulse">
         {/* Prayer Cards */}
-        {[...Array(4)].map((_, idx) => (
+        {[...Array(2)].map((_, idx) => (
           <div
             key={idx}
             className={`rounded-2xl p-4 shadow-md ${

@@ -4,11 +4,11 @@ import { Sun, Moon, Sunrise, Sunset, Star } from "lucide-react";
 export const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
 export const gradients: Record<string, string> = {
-  Fajr: "from-sky-400 to-blue-600",
-  Dhuhr: "from-yellow-300 to-yellow-500",
-  Asr: "from-lime-400 to-green-600",
-  Maghrib: "from-orange-400 to-pink-500",
-  Isha: "from-indigo-500 to-purple-700",
+  Fajr: "from-sky-600 to-blue-300",
+  Dhuhr: "from-yellow-600 to-yellow-400",
+  Asr: "from-lime-600 to-green-400",
+  Maghrib: "from-orange-600 to-pink-400",
+  Isha: "from-indigo-700 to-purple-600",
 };
 
 export const prayerIcons = {

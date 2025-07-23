@@ -1,12 +1,11 @@
-import React from "react";
-import type { NavItemType } from "../types/nav";
+// import type { NavItemType } from "../types/nav";
 
-interface Props {
-  item: NavItemType;
-  isActive: boolean;
-}
+// interface Props {
+//   item: NavItemType;
+//   isActive: boolean;
+// }
 
-const NavItem: Props = ({ item, isActive }) => {
+const NavItem = ({ item, isActive }: { item: any; isActive: any }) => {
   return (
     <div className="flex flex-col items-center justify-center text-xs">
       <div

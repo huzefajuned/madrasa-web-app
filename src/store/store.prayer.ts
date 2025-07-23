@@ -17,7 +17,7 @@ interface PrayerState {
 
 export const usePrayerStore = create<PrayerState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       prayerTimes: null,
       location: null,
       isLoading: false,
@@ -79,6 +79,8 @@ export const usePrayerStore = create<PrayerState>()(
         }
       },
 
+      // fetch prayare times.
+      
       fetchPrayerTimes: async (latitude: number, longitude: number) => {
         set({ isLoading: true, error: null })
 

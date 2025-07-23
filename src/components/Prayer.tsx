@@ -8,7 +8,6 @@ import PrayerTimeRow from "./PrayerTimeRow";
 
 interface PrayerCardProps {
   prayer: string;
-  time: string;
   nextPrayer: string;
   nextPrayerTime: string;
   gradient: string;
@@ -48,19 +47,20 @@ const PrayerCard: React.FC<PrayerCardProps> = ({
           <div className=" w-full">
             <h2 className="text-2xl font-bold">{prayer}</h2>
             <p className="text-sm opacity-90 flex w-full">
+              <p>nextPrayerTime : {nextPrayerTime}</p>
               <p> Next prayer in {timeUntilNext}</p>
             </p>
           </div>
         </div>
         <div className="text-right relative">
-          <p className="text-sm opacity-90 absolute bottom-2 right-0">
+          <p className="text-sm opacity-90 absolute bottom-0 right-0 bg-[#FFFFFF45] px-3 py-1 rounded-full">
             {currentDay}
           </p>
         </div>
       </div>
 
       {/* Prayer Times Row */}
-      {/* <PrayerTimeRow currentPrayer={prayer} allPrayers={allPrayers} /> */}
+      <PrayerTimeRow currentPrayer={prayer} allPrayers={allPrayers} />
 
       {/* Progress */}
       <PrayerProgress currentPrayer={prayer} allPrayers={allPrayers} />

@@ -6,6 +6,8 @@ export interface PrayerTimes {
   Isha: string;
 }
 
+export type PrayerName = keyof PrayerTimes; // "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha"
+
 export interface Location {
   latitude: number;
   longitude: number;

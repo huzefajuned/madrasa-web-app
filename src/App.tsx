@@ -7,6 +7,7 @@ import LocationHeader from "./components/Header";
 import PrayerCard from "./components/Prayer";
 import BottomNav from "./components/Bottom-Nav";
 import { gradients, prayerNames } from "./helpers/prayerIcons";
+import type { PrayerName } from "./types/prayer";
 
 function App() {
   const {
@@ -54,30 +55,25 @@ function App() {
 
       <main className="px-4 py-6 space-y-4">
         {prayerNames.map((prayer, index) => {
-          const nextPrayer = prayerNames[index + 1] || prayerNames[0]; // wrap around
-          const nextPrayerTime = prayerTimes[nextPrayer];
+          const nextPrayer = prayerNames[index + 1] || prayerNames[0]
+          // const nextPrayerTime = prayerTimes[nextPrayer];
+          const nextPrayerTime = prayerTimes[nextPrayer as PrayerName];
 
+          console.log("nextPrayerTime :",nextPrayerTime, typeof nextPrayerTime)
           return (
-            <PrayerCard
-              key={prayer}
-              prayer={prayer}
-              time={prayerTimes[prayer]}
-              nextPrayer={nextPrayer}
-              nextPrayerTime={nextPrayerTime}
-              gradient={gradients[prayer]}
-              allPrayers={prayerTimes}
-            />
+            <>
+              <PrayerCard
+                key={prayer}
+                prayer={prayer}
+                nextPrayer={nextPrayer}
+                nextPrayerTime={nextPrayerTime}
+                gradient={gradients[prayer]}
+                allPrayers={prayerTimes}
+              />
+              <p> nextPrayer :{nextPrayer}</p>
+            </>
           );
         })}
-
-        {/* <PrayerCard
-          prayer="Isha"
-          time={prayerTimes.Isha}
-          nextPrayer="Fajr"
-          nextPrayerTime={prayerTimes.Fajr}
-          gradient="from-purple-600 to-purple-800"
-          allPrayers={prayerTimes}
-        /> */}
       </main>
       <BottomNav />
     </div>

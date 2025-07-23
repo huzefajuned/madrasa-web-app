@@ -46,50 +46,47 @@ export default function PrayerProgress({
     return () => clearInterval(interval);
   }, [currentPrayer, allPrayers]);
 
-  // Arc settings
-  const radius = 80;
-  const circumference = Math.PI * radius; // Half circle
-  const offset = circumference - (progress / 100) * circumference;
+  // Arc properties
+  const arcCount = 5;
+  const filledArcs = Math.round((progress / 100) * arcCount);
+
+  // These are the precomputed paths for each 25° arc slice (you can pre-generate or use polar to cartesian)
+  const arcPaths = [
+    // Leftmost arc
+    "M36.7 97.17 A125 125 0 0 1 61.92 61.3",
+    "M73.82 50.9 A125 125 0 0 1 112.72 30.7",
+    "M128.08 26.94 A125 125 0 0 1 171.92 26.94",
+    "M187.28 30.7 A125 125 0 0 1 226.18 50.9",
+    "M238.08 61.3 A125 125 0 0 1 263.29 97.17",
+  ];
 
   return (
-    <div className="w-full flex justify-center">
-      <svg viewBox="0 0 200 100" className="w-full max-w-xs ">
-        {/* Track */}
-        <path
-          d="M20,100 A80,80 0 0,1 180,100"
-          fill="none"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="12"
-        />
-        {/* Progress */}
-        <path
-          d="M20,100 A80,80 0 0,1 180,100"
-          fill="none"
-          stroke="white"
-          strokeWidth="10"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          className="transition-all duration-1000 ease-in-out"
-        />
-        {/* Dots */}
-        {[0, 1, 2, 3, 4, 5].map((i) => {
-          const angle = Math.PI * (i / 5); // 0 to π
-          const x = 100 + radius * Math.cos(angle - Math.PI);
-          const y = 100 + radius * Math.sin(angle - Math.PI);
-          const active = (progress / 100) * 5 >= i;
-
-          return (
-            <circle
-              key={i}
-              cx={x}
-              cy={y}
-              r="5"
-              fill={active ? "white" : "rgba(255,255,255,0.3)"}
-              className="transition-all duration-300"
+    <div className="overflow-clip -mx-12 -mt-4 -mb-1">
+      <svg viewBox="0 0 300 100" className="bg-transparent w-full">
+        {arcPaths.map((d, i) => (
+          <g key={i}>
+            {/* Background arc (dimmed) */}
+            <path
+              d={d}
+              stroke="white"
+              strokeOpacity="0.5"
+              strokeWidth="11.875"
+              fill="none"
+              strokeLinecap="round"
             />
-          );
-        })}
+            {/* Foreground arc (active fill) */}
+            {i < filledArcs && (
+              <path
+                d={d}
+                stroke="white"
+                strokeWidth="11.875"
+                fill="none"
+                strokeLinecap="round"
+                className="transition-all duration-500"
+              />
+            )}
+          </g>
+        ))}
       </svg>
     </div>
   );
